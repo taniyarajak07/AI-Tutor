@@ -18,6 +18,8 @@ from api.adaptive import router as adaptive_router
 from api import assessment
 from api import final_assessment
 from api import learning_path
+
+# 👇 THIS IS THE MISSING LINE THAT CAUSED THE ERROR 👇
 app = FastAPI(
     title="Personal AI Teacher API",
     description="Backend API for the Personal AI Teacher",
@@ -43,7 +45,6 @@ app.add_middleware(
 class AITestRequest(BaseModel):
     prompt: str
 
-
 @app.get("/health")
 def health_check():
     return {
@@ -51,15 +52,12 @@ def health_check():
         "service": "Personal AI Teacher",
     }
 
-
 @app.post("/api/test-ai")
 def test_ai(request: AITestRequest):
     response = generate_response(request.prompt)
-
     return {
         "response": response
     }
-
 
 app.include_router(auth_router)
 app.include_router(lesson_router)
@@ -75,6 +73,9 @@ app.include_router(adaptive_router)
 app.include_router(assessment.router)
 app.include_router(final_assessment.router)
 app.include_router(learning_path.router)
+
+# 👇 THIS SERVES YOUR FRONTEND UI 👇
+app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn

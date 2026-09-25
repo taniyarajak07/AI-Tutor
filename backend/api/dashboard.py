@@ -7,8 +7,11 @@ router = APIRouter(
     tags=["Dashboard"]
 )
 
-@router.get("/{student_id}/dashboard")
-def get_student_dashboard(student_id: str, student: dict = Depends(get_current_student)):
+# Change this:
+# async def get_dashboard(student_id: str, user: dict = Depends(get_current_user)):
+
+# To this:
+async def get_dashboard(student_id: str):
 
     try:
         # 1. Get student information (already provided by dependency)
